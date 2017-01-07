@@ -15,6 +15,8 @@
  */
 package com.example.android.implicitintents;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -35,10 +37,7 @@ public class MainActivity extends AppCompatActivity {
      * @param v Button that was clicked.
      */
     public void onClickOpenWebpageButton(View v) {
-        // TODO (5) Create a String that contains a URL ( make sure it starts with http:// or https:// )
-
-        // TODO (6) Replace the Toast with a call to openWebPage, passing in the URL String from the previous step
-        Toast.makeText(this, "TODO: Open a web page when this button is clicked", Toast.LENGTH_SHORT).show();
+        openWebpage("https://docs.google.com/spreadsheets/d/1FIQ9vhmW2nATRgKmKiaSvPpCqe4JWMqAC6n6QFvv1nM/edit#gid=0");
     }
 
     /**
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
      * @param v Button that was clicked.
      */
     public void onClickOpenAddressButton(View v) {
-        Toast.makeText(this, "TODO: Open a map when this button is clicked", Toast.LENGTH_SHORT).show();
+        showMap("3612 Flora Vista Ave, Santa Clara, CA");
     }
 
     /**
@@ -77,12 +76,22 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    // TODO (1) Create a method called openWebPage that accepts a String as a parameter
-    // Do steps 2 - 4 within openWebPage
+    private void openWebpage(String url) {
+        Uri uri = Uri.parse(url);
+        Intent intentOpenWebpage = new Intent(Intent.ACTION_VIEW, uri);
 
-        // TODO (2) Use Uri.parse to parse the String into a Uri
+        if (intentOpenWebpage.resolveActivity(getPackageManager()) != null) {
+            startActivity(intentOpenWebpage);
+        }
+    }
 
-        // TODO (3) Create an Intent with Intent.ACTION_VIEW and the webpage Uri as parameters
+    public void showMap(String geoLocation) {
+        Uri.Builder builder = new Uri.Builder().scheme("geo").path("0,0").query(geoLocation);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(builder.build());
 
-        // TODO (4) Verify that this Intent can be launched and then call startActivity
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
 }
